@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Header from './Header';
 import Title from './Title';
 import { useNavigate } from 'react-router-dom';
+import { View, Pencil, Trash2 } from 'lucide-react';
+
 
 function MainPage() {
   const [blogs, setBlogs] = useState(JSON.parse(localStorage.getItem('blogs')) || []);
@@ -42,40 +44,42 @@ function MainPage() {
       <Header />
       <div>
         {
-        blogs.length === 0 ? (
-          <p className="text-center text-gray-500 text-lg">No blogs available currently.</p>
-        ) : blogs.map((blog) => (
-          <div
-            key={blog.id}
-            className="flex border-2 border-gray-200 p-4 cursor-pointer"
-          >
-            <img
-              src={blog.image}
-              alt="Blog"
-              className="h-40 w-50 object-cover"
-              onClick={() => handleBlogClick(blog.id)}
-            />
-            <div className="ml-4 w-2/3">
-              <h2 className="text-xl italic font-bold">{blog.title}</h2>
-              <p>{truncateText(blog.content, 100)}</p>
-              <p className="text-sm text-gray-500">Views: {blog.views || 0}</p>
-              <div className="mt-2">
-                <button
-                  onClick={() => handleEdit(blog.id)}
-                  className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(blog.id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                >
-                  Delete
-                </button>
+          blogs.length === 0 ? (
+            <p className="text-center text-gray-500 text-lg">No blogs available currently.</p>
+          ) : blogs.map((blog) => (
+            <div
+              key={blog.id}
+              className="flex border-2 border-gray-200 p-4 cursor-pointer "
+            >
+              <img
+                src={blog.image}
+                alt="Blog"
+                className="h-40 w-50 object-cover"
+                onClick={() => handleBlogClick(blog.id)}
+              />
+              <div className="ml-4 w-2/3">
+                <h2 className="text-xl italic font-bold">{blog.title}</h2>
+                <p>{truncateText(blog.content, 600)}</p>
+                <div className="flex">
+                  <p className="flex ml-2 px-2 py-3"><View /> {blog.views || 0}</p>
+                  <div className="mt-2">
+                    <button
+                      onClick={() => handleEdit(blog.id)}
+                      className="px-2 py-1 rounded mr-2"
+                    >
+                      <Pencil />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(blog.id)}
+                      className="px-2 py-1 rounded"
+                    >
+                      <Trash2 />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </>
   );

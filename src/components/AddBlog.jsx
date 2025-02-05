@@ -6,6 +6,7 @@ const AddBlog = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [image, setImage] = useState("null");
+    const [author, setAuthor] = useState("");
     const navigate = useNavigate();
 
     const handleImageChange = (e) => {
@@ -22,7 +23,8 @@ const AddBlog = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const existingBlogs = JSON.parse(localStorage.getItem("blogs")) || [];
-        const newBlog = { id: Date.now(), title, image, content };
+        console.log(Date.now())
+        const newBlog = { id: Date.now(), title, author, image, content };
         localStorage.setItem("blogs", JSON.stringify([...existingBlogs, newBlog]));
         console.log("New Blog Added:", newBlog);
         navigate("/blogs");
@@ -42,6 +44,14 @@ const AddBlog = () => {
                         className="w-full border p-2 rounded"
                         required
                     />
+                    <input
+                        type="text"
+                        placeholder="Author Name"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        className="w-full border p-2 rounded"
+                        required
+                    />
                     <textarea
                         placeholder="Blog Content"
                         value={content}
@@ -58,7 +68,7 @@ const AddBlog = () => {
                         required
                     ></input>
 
-                    {image && (<img src={image} alt="preview"/>)}
+                    {image && image.length > 0 && <img src={image} alt="preview" />}
                     <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
                         Submit Blog
                     </button>

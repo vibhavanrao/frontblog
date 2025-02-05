@@ -25,7 +25,7 @@ const AddBlog = () => {
         const newBlog = { id: Date.now(), title, image, content };
         localStorage.setItem("blogs", JSON.stringify([...existingBlogs, newBlog]));
         console.log("New Blog Added:", newBlog);
-        navigate("/");
+        navigate("/blogs");
     };
 
     return (

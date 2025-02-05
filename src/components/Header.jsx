@@ -13,6 +13,13 @@ const Header = () => {
             <Search />
           </div>
         </div>
+        <div >
+          <ul className='flex p-4 space-x-4 mr-8'>
+            <li className='border rounded-2xl px-2'><a href="\"><b>   Home   </b></a></li>
+            <li className='border rounded-2xl px-2'><a href='\blogs'><b>   Latest Blogs   </b></a></li>
+            <li className='border rounded-2xl px-2'><a href="\AddBlog"><b>   Add Blog   </b></a></li>
+          </ul>
+        </div>
       </div>
     </div>
   )

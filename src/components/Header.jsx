@@ -2,7 +2,7 @@ import React from 'react'
 import { Search, FilePlus, House, FolderOpen } from 'lucide-react';
 const Header = () => {
   return (
-    <div>
+    <div className='bg-white'>
       <div className='flex border w-full h-20 justify-between'>
         <div>
           <img className='h-18 px-2' src="/OIP.jpg" alt="Image"></img>

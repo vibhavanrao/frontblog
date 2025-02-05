@@ -39,7 +39,7 @@ function MainPage() {
   };
 
   return (
-    <>
+    <div className='bg-amber-50 min-h-screen'>
       <Title />
       <Header />
       <div>
@@ -81,7 +81,7 @@ function MainPage() {
             </div>
           ))}
       </div>
-    </>
+    </div>
   );
 }
 

@@ -31,7 +31,7 @@ const AddBlog = () => {
     };
 
     return (
-        <>
+        <div className="bg-amber-50 min-h-screen">
             <Title />
             <div className="max-w-lg mx-auto p-4">
                 <h1 className="text-2xl mb-4">Add a New Blog</h1>
@@ -74,7 +74,7 @@ const AddBlog = () => {
                     </button>
                 </form>
             </div>
-        </>
+        </div>
     );
 };
 

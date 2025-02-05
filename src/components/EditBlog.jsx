@@ -45,7 +45,7 @@ const EditBlog = () => {
     };
 
     return (
-        <>
+        <div className="bg-amber-50 min-h-screen">
             <Title />
             <div className="max-w-lg mx-auto p-4">
                 <h1 className="text-2xl mb-4">Edit Blog</h1>
@@ -80,7 +80,7 @@ const EditBlog = () => {
                     </button>
                 </form>
             </div>
-        </>
+        </div>
     );
 };
 

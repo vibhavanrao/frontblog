@@ -1,21 +1,27 @@
-import React from 'react'
-import Header from './Header'
-import Title from './Title'
+import React, { useEffect } from 'react';
+import Header from './Header';
+import Title from './Title';
 
 const FirstPage = () => {
+    useEffect(() => {
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+        return () => {
+            document.body.style.overflow = 'auto'; // Reset when component unmounts
+        };
+    }, []);
+
     return (
-        <div>
+        <div className="h-screen w-screen bg-cover bg-center"
+            style={{ backgroundImage: `url('/Blogging-in-Digital-Marketing.jpg')` }}>
             <Title />
             <Header />
-            <div className='flex items-center'>
-                <img className='p-8 h-125' src="https://th.bing.com/th/id/OIP.4BvJYVr9W9ewKRV3HlF5PQHaEK?w=300&h=180&c=7&r=0&o=5&pid=1.7" />
-                <div className='pl-10'>
-                    <h1 className='italic font-extrabold text-4xl text-center'><u>Bloggerss-spot</u></h1>
-                    <p className='italic font-medium text-4xl pt-4'>Create and publish your blogs with ease</p>
-                </div>
+            <div className='flex flex-col items-center justify-center h-fullp-8'>
+                <p className='italic font-medium text-2xl pt-4 text-center'>
+                    Create and publish your blogs with ease
+                </p>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default FirstPage
+export default FirstPage;

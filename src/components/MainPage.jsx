@@ -1,36 +1,60 @@
-import { useState } from 'react';
-import Header from './Header';
-import Title from './Title';
-import { useNavigate } from 'react-router-dom';
-import { View, Pencil, Trash2 } from 'lucide-react';
-
+import { useState, useEffect } from "react";
+import Header from "./Header";
+import Title from "./Title";
+import { useNavigate } from "react-router-dom";
+import { View, Pencil, Trash2 } from "lucide-react";
+import axios from "axios";
 
 function MainPage() {
-  const [blogs, setBlogs] = useState(JSON.parse(localStorage.getItem('blogs')) || []);
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  // Fetch blogs from backend
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/blogs");
+        setBlogs(response.data);
+      } catch (err) {
+        setError("Failed to load blogs");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   // Limit description length
   const truncateText = (text, maxLength) => {
-    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+    return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
   };
 
-  // Handle blog click - increase view count and navigate to details page
-  const handleBlogClick = (id) => {
-    const updatedBlogs = blogs.map(blog =>
-      blog.id === id ? { ...blog, views: (blog.views || 0) + 1 } : blog
-    );
-
-    setBlogs(updatedBlogs);
-    localStorage.setItem('blogs', JSON.stringify(updatedBlogs));
-
-    navigate(`/blog/${id}`); // Redirect to blog details page
+  // Handle blog click - Increase view count and navigate to details page
+  const handleBlogClick = async (id) => {
+    try {
+      await axios.put(`http://localhost:5000/api/blogs/${id}/view`);
+      setBlogs((prevBlogs) =>
+        prevBlogs.map((blog) =>
+          blog.id === id ? { ...blog, views: (blog.views || 0) + 1 } : blog
+        )
+      );
+      navigate(`/blog/${id}`);
+    } catch (error) {
+      console.error("Error updating views:", error);
+    }
   };
 
   // Handle blog deletion
-  const handleDelete = (id) => {
-    const updatedBlogs = blogs.filter(blog => blog.id !== id);
-    setBlogs(updatedBlogs);
-    localStorage.setItem('blogs', JSON.stringify(updatedBlogs));
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/blogs/${id}`);
+      setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
+    } catch (error) {
+      console.error("Error deleting blog:", error);
+    }
   };
 
   // Handle blog editing
@@ -39,29 +63,37 @@ function MainPage() {
   };
 
   return (
-    <div className='bg-amber-50 min-h-screen'>
+    <div className="bg-amber-50 min-h-screen">
       <Title />
       <Header />
       <div>
-        {
-          blogs.length === 0 ? (
-            <p className="text-center text-gray-500 text-lg">No blogs available currently.</p>
-          ) : blogs.map((blog) => (
+        {loading ? (
+          <p className="text-center text-gray-500 text-lg">Loading blogs...</p>
+        ) : error ? (
+          <p className="text-center text-red-500 text-lg">{error}</p>
+        ) : blogs.length === 0 ? (
+          <p className="text-center text-gray-500 text-lg">No blogs available currently.</p>
+        ) : (
+          blogs.map((blog) => (
             <div
               key={blog.id}
-              className="flex border-2 border-gray-200 p-4 cursor-pointer "
+              className="flex border-2 border-gray-200 p-4 cursor-pointer"
             >
-              <img
-                src={blog.image}
-                alt="Blog"
-                className="h-40 w-50 object-cover"
-                onClick={() => handleBlogClick(blog.id)}
-              />
+              {blog.image && (
+                <img
+                  src={blog.image}
+                  alt="Blog"
+                  className="h-40 w-50 object-cover"
+                  onClick={() => handleBlogClick(blog.id)}
+                />
+              )}
               <div className="ml-4 w-2/3">
                 <h2 className="text-xl italic font-bold">{blog.title}</h2>
                 <p>{truncateText(blog.content, 600)}</p>
                 <div className="flex">
-                  <p className="flex ml-2 px-2 py-3"><View /> {blog.views || 0}</p>
+                  <p className="flex ml-2 px-2 py-3">
+                    <View /> {blog.views || 0}
+                  </p>
                   <div className="mt-2">
                     <button
                       onClick={() => handleEdit(blog.id)}
@@ -79,7 +111,8 @@ function MainPage() {
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        )}
       </div>
     </div>
   );

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Title from "./Title";
+import axios from "axios";
 
 const AddBlog = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [image, setImage] = useState("null");
+    const [image, setImage] = useState(null);
     const [author, setAuthor] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleImageChange = (e) => {
@@ -20,14 +22,20 @@ const AddBlog = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const existingBlogs = JSON.parse(localStorage.getItem("blogs")) || [];
-        console.log(Date.now())
-        const newBlog = { id: Date.now(), title, author, image, content };
-        localStorage.setItem("blogs", JSON.stringify([...existingBlogs, newBlog]));
-        console.log("New Blog Added:", newBlog);
-        navigate("/blogs");
+        setLoading(true);
+
+        const newBlog = { title, author, image, content };
+
+        try {
+            await axios.post("http://localhost:5000/api/blogs", newBlog);
+            navigate("/blogs"); // Redirect to the blogs page after adding
+        } catch (error) {
+            console.error("Error adding blog:", error.response?.data || error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -66,11 +74,14 @@ const AddBlog = () => {
                         onChange={handleImageChange}
                         className="w-full border p-2 rounded"
                         required
-                    ></input>
-
-                    {image && image.length > 0 && <img src={image} alt="preview" />}
-                    <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
-                        Submit Blog
+                    />
+                    {image && <img src={image} alt="preview" className="w-full mt-2" />}
+                    <button
+                        type="submit"
+                        className="bg-green-500 text-white px-4 py-2 rounded"
+                        disabled={loading}
+                    >
+                        {loading ? "Submitting..." : "Submit Blog"}
                     </button>
                 </form>
             </div>

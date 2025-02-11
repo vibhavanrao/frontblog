@@ -12,15 +12,9 @@ const AddBlog = () => {
     const navigate = useNavigate();
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setImage(reader.result); // Save Base64 string
-            };
-        }
+        setImage(e.target.value.trim());
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -69,12 +63,13 @@ const AddBlog = () => {
                         required
                     ></textarea>
                     <input
-                        type="file"
-                        accept="image/*"
+                        type="text"
+                        placeholder="Enter image URL"
                         onChange={handleImageChange}
                         className="w-full border p-2 rounded"
                         required
                     />
+
                     {image && <img src={image} alt="preview" className="w-full mt-2" />}
                     <button
                         type="submit"

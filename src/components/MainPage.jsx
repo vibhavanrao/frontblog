@@ -35,12 +35,12 @@ function MainPage() {
   // Handle blog click - Increase view count and navigate to details page
   const handleBlogClick = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/blogs/${id}/view`);
-      setBlogs((prevBlogs) =>
-        prevBlogs.map((blog) =>
-          blog.id === id ? { ...blog, views: (blog.views || 0) + 1 } : blog
-        )
-      );
+      await axios.put(`http://localhost:5000/api/blogs/${id}`);
+      await axios
+        .put(`http://localhost:5000/api/blogs/${id}/views`)
+        .then((response) => console.log("Views updated:", response.data))
+        .catch((error) => console.error("Error updating views:", error));
+
       navigate(`/blog/${id}`);
     } catch (error) {
       console.error("Error updating views:", error);

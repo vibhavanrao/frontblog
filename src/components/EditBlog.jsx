@@ -32,17 +32,13 @@ const EditBlog = () => {
         fetchBlog();
     }, [id, navigate]);
 
-    // Convert uploaded image to Base64
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setImage(reader.result);
-            };
+        const imageUrl = e.target.value.trim(); // Get the URL input
+        if (imageUrl) {
+            setImage(imageUrl); // Directly set the URL
         }
     };
+    
 
     // Update blog in SQL database
     const handleUpdate = async (e) => {
@@ -94,10 +90,12 @@ const EditBlog = () => {
                         required
                     ></textarea>
                     <input
-                        type="file"
-                        accept="image/*"
+                        type="text"
+                        placeholder="Enter image URL"
+                        value={image}
                         onChange={handleImageChange}
                         className="w-full border p-2 rounded"
+                        required
                     />
 
                     {image && (
